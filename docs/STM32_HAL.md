@@ -1,15 +1,21 @@
 # Using the library with STM32 HAL
 
-The project contains C implementations for the PN532 interface which
-work with STM32Cube HAL.  These files are:
+This repository ships plain C implementations of the PN532 drivers so
+that they can be compiled in STM32Cube HAL projects without the Arduino
+framework.  Add the following source files to your application
+depending on the interface you plan to use:
 
-- `PN532_I2C/PN532_I2C.c`
-- `PN532_SPI/PN532_SPI.c`
-- `PN532_HSU/PN532_HSU.c`
+- `PN532/PN532.c`
+- `PN532/PN532_debug.c`
+- `PN532_I2C/PN532_I2C.c` *(I2C mode)*
+- `PN532_SPI/PN532_SPI.c` *(SPI mode)*
+- `PN532_HSU/PN532_HSU.c` *(UART/HSU mode)*
+- `NDEF/c_version/ndef_c.c` *(optional NDEF helpers)*
 
-When building for STM32 you should **exclude** all `.cpp` files located
-in the same folders.  They rely on the Arduino core and will produce
-errors if compiled for STM32.
+All C headers from these directories should be available on the include
+path.  Make sure that **none** of the `.cpp` files are compiled as they
+contain Arduino specific code and will pull in unnecessary
+dependencies.
 
 ## Peripheral initialization
 Below are minimal examples for setting up the HAL handles.  Adjust the
@@ -77,4 +83,12 @@ pn532_i2c_create_interface(&nfc_i2c, &iface);
 pn532_t nfc;
 pn532_init(&nfc, &iface);
 pn532_begin(&nfc);
+pn532_SAMConfig(&nfc);
+
+uint8_t uid[7];
+uint8_t uid_len;
+
+if (pn532_read_passive_target_id(&nfc, 0x00, uid, &uid_len, 1000)) {
+    // UID is now available in 'uid'
+}
 ```

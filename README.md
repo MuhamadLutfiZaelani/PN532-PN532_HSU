@@ -75,14 +75,15 @@ If your Arduino has only one serial interface and you want to keep it for contro
 
 ## STM32 HAL
 
-The repository includes C implementations suitable for STM32Cube HAL in the
-`PN532_I2C`, `PN532_SPI` and `PN532_HSU` folders. When compiling for STM32 make
-sure only the `.c` files are added to your project. The Arduino `.cpp` versions
-should be removed or ignored during the build as they depend on the Arduino
-framework.
+The repository includes C implementations suitable for STM32Cube HAL.  Add
+`PN532/PN532.c`, `PN532/PN532_debug.c` and the interface driver you want from
+`PN532_I2C/PN532_I2C.c`, `PN532_SPI/PN532_SPI.c` or
+`PN532_HSU/PN532_HSU.c`.  When compiling for STM32 make sure only these `.c`
+files are used.  All Arduino specific `.cpp` sources should be removed or
+ignored so that there are no Arduino dependencies.
 
-See [docs/STM32_HAL.md](docs/STM32_HAL.md) for example peripheral
-initialization and usage.
+See [docs/STM32_HAL.md](docs/STM32_HAL.md) for peripheral initialisation and a
+minimal usage example.
 CubeIDE samples using the HAL drivers are provided in `examples/stm32_i2c` and `examples/stm32_spi`.
 
 ## NDEF C version
