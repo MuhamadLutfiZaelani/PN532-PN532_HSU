@@ -71,7 +71,7 @@ int8_t PN532_I2C::writeCommand(const uint8_t *header, uint8_t hlen, const uint8_
     
     _wire->endTransmission();
     
-    DMSG('\n');
+    DMSG_STR("\n");
 
     return readAckFrame();
 }
@@ -170,7 +170,7 @@ int16_t PN532_I2C::readResponse(uint8_t buf[], uint8_t len, uint16_t timeout)
         
         DMSG_HEX(buf[i]);
     }
-    DMSG('\n');
+    DMSG_STR("\n");
     
     uint8_t checksum = read();
     if (0 != (uint8_t)(sum + checksum)) {
@@ -188,8 +188,8 @@ int8_t PN532_I2C::readAckFrame()
     uint8_t ackBuf[sizeof(PN532_ACK)];
     
     DMSG("wait for ack at : ");
-    DMSG(millis());
-    DMSG('\n');
+    DMSG_INT(millis());
+    DMSG_STR("\n");
     
     uint16_t time = 0;
     do {
@@ -208,8 +208,8 @@ int8_t PN532_I2C::readAckFrame()
     } while (1); 
     
     DMSG("ready at : ");
-    DMSG(millis());
-    DMSG('\n');
+    DMSG_INT(millis());
+    DMSG_STR("\n");
     
 
     for (uint8_t i = 0; i < sizeof(PN532_ACK); i++) {

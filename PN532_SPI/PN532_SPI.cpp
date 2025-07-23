@@ -121,7 +121,7 @@ int16_t PN532_SPI::readResponse(uint8_t buf[], uint8_t len, uint16_t timeout)
 
             DMSG_HEX(buf[i]);
         }
-        DMSG('\n');
+        DMSG_STR("\n");
 
         uint8_t checksum = read();
         if (0 != (uint8_t)(sum + checksum)) {
@@ -187,7 +187,7 @@ void PN532_SPI::writeFrame(const uint8_t *header, uint8_t hlen, const uint8_t *b
 
     digitalWrite(_ss, HIGH);
 
-    DMSG('\n');
+    DMSG_STR("\n");
 }
 
 int8_t PN532_SPI::readAckFrame()
