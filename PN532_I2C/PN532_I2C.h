@@ -1,44 +1,22 @@
-/**
- * @modified picospuch
- */
-
 #ifndef __PN532_I2C_H__
 #define __PN532_I2C_H__
 
-#include <Wire.h>
 #include "PN532Interface.h"
+#include <stdint.h>
+#include "stm32f1xx_hal.h"
 
-class PN532_I2C : public PN532Interface {
-public:
-    PN532_I2C(TwoWire &wire);
-    
-    void begin();
-    void wakeup();
-    virtual int8_t writeCommand(const uint8_t *header, uint8_t hlen, const uint8_t *body = 0, uint8_t blen = 0);
-    int16_t readResponse(uint8_t buf[], uint8_t len, uint16_t timeout);
-    
-private:
-    TwoWire* _wire;
+typedef struct {
+    I2C_HandleTypeDef *hi2c;
     uint8_t command;
-    
-    int8_t readAckFrame();
-    int16_t getResponseLength(uint8_t buf[], uint8_t len, uint16_t timeout);
-    
-    inline uint8_t write(uint8_t data) {
-        #if ARDUINO >= 100
-            return _wire->write(data);
-        #else
-            return _wire->send(data);
-        #endif
-    }
-    
-    inline uint8_t read() {
-        #if ARDUINO >= 100
-            return _wire->read();
-        #else
-            return _wire->receive();
-        #endif
-    }
-};
+    uint8_t address;
+} pn532_i2c_t;
+
+void pn532_i2c_init(pn532_i2c_t *dev, I2C_HandleTypeDef *hi2c, uint8_t address);
+void pn532_i2c_create_interface(pn532_i2c_t *dev, pn532_interface_t *iface);
+int8_t pn532_i2c_write_command(pn532_i2c_t *dev, const uint8_t *header, uint8_t hlen,
+                               const uint8_t *body, uint8_t blen);
+int16_t pn532_i2c_read_response(pn532_i2c_t *dev, uint8_t *buf, uint8_t len, uint16_t timeout);
+void pn532_i2c_wakeup(pn532_i2c_t *dev);
+void pn532_i2c_begin(pn532_i2c_t *dev);
 
 #endif
