@@ -65,6 +65,7 @@ DMA_HandleTypeDef hdma_usart1_rx;
 // Tambahan untuk NFC UID
 PN532_HSU pn532_hsu;
 PN532 nfc;
+pn532_interface_t pn532_if;
 
 // Buffer RX untuk menerima data Modbus
 static uint8_t rxBuf[RX_BUF_SIZE];
@@ -155,12 +156,13 @@ int main(void)
   // Memulai UART1 dalam mode DMA (menerima data Modbus ke rxBuf)
   HAL_UART_Receive_DMA(&huart1, rxBuf, RX_BUF_SIZE);
 
-  PN532_HSU_init(&pn532_hsu, &huart2);
-  PN532_init(&nfc, (PN532Interface *)&pn532_hsu);
+  pn532_hsu_init(&pn532_hsu, &huart2);
+  pn532_hsu_create_interface(&pn532_hsu, &pn532_if);
+  pn532_init(&nfc, &pn532_if);
 
-  PN532_begin(&nfc);
+  pn532_begin(&nfc);
 
-  uint32_t version = PN532_getFirmwareVersion(&nfc);
+  uint32_t version = pn532_get_firmware_version(&nfc);
   if (version) {
 	  printf("Found PN5%02lx, firmware ver %lu.%lu\n",
 			 (version >> 24) & 0xFF,
@@ -170,8 +172,8 @@ int main(void)
 	  printf("PN532 not found\n");
   }
 
-  PN532_SAMConfig(&nfc);
-  PN532_setPassiveActivationRetries(&nfc, 0xFF);
+  pn532_SAMConfig(&nfc);
+  pn532_set_passive_activation_retries(&nfc, 0xFF);
 
   uint8_t uid[7];
   uint8_t uidLen;
@@ -189,7 +191,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
     if (HAL_GetTick() - lastNfcTick > 1000) {
       lastNfcTick = HAL_GetTick();
-      if (PN532_readPassiveTargetID(&nfc, PN532_MIFARE_ISO14443A, uid, &uidLen, 1000)) {
+      if (pn532_read_passive_target_id(&nfc, PN532_MIFARE_ISO14443A, uid, &uidLen, 1000)) {
         holding_registers[0] = 1;  // kartu terdeteksi
         holding_registers[1] = ((uint16_t)uid[0] << 8) | uid[1];
         holding_registers[2] = ((uint16_t)uid[2] << 8) | uid[3];
