@@ -27,6 +27,8 @@ extract the three folders(PN532, PN532_SPI, PN532_HSU and PN532_I2C) into librar
 2. Follow the examples of the PN532 library.  A minimal demonstration of the C
    NDEF implementation is provided in `examples/ndef_c_example`.
 
+Additional Arduino sketches are located under `PN532/examples`. STM32Cube HAL example projects can be found in the `examples` folder such as `examples/blackpill`, `examples/stm32_i2c` and `examples/stm32_spi`.
+
 ### To do
 + Card emulation
 
@@ -81,6 +83,7 @@ framework.
 
 See [docs/STM32_HAL.md](docs/STM32_HAL.md) for example peripheral
 initialization and usage.
+CubeIDE samples using the HAL drivers are provided in `examples/stm32_i2c` and `examples/stm32_spi`.
 
 ## NDEF C version
 
