@@ -11,6 +11,9 @@
 #define PN532_COMMAND_INLISTPASSIVETARGET   (0x4A)
 #define PN532_COMMAND_RFCONFIGURATION       (0x32)
 
+// Card baud rates
+#define PN532_MIFARE_ISO14443A              (0x00)
+
 typedef struct {
     pn532_interface_t *iface;
     uint8_t uid[7];
