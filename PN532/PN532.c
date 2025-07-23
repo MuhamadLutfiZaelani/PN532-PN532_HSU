@@ -38,6 +38,17 @@ bool pn532_SAMConfig(pn532_t *nfc)
     return nfc->iface->read_response(nfc->iface,nfc->packet_buffer,8,1000) >= 0;
 }
 
+bool pn532_set_passive_activation_retries(pn532_t *nfc, uint8_t max_retries)
+{
+    uint8_t cmd[] = {PN532_COMMAND_RFCONFIGURATION, 5, 0xFF, 0x01, max_retries};
+    if(nfc->iface->write_command(nfc->iface, cmd, sizeof(cmd), NULL, 0))
+        return false;
+    return nfc->iface->read_response(nfc->iface,
+                                     nfc->packet_buffer,
+                                     sizeof(nfc->packet_buffer),
+                                     1000) >= 0;
+}
+
 bool pn532_read_passive_target_id(pn532_t *nfc, uint8_t cardbaudrate,
                                   uint8_t *uid, uint8_t *uid_length, uint16_t timeout)
 {
