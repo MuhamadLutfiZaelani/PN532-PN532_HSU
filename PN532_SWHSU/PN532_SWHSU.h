@@ -1,32 +1,21 @@
-
 #ifndef __PN532_SWHSU_H__
 #define __PN532_SWHSU_H__
 
-#include <SoftwareSerial.h>
-
 #include "PN532Interface.h"
-#include "Arduino.h"
+#include <stdint.h>
+#include "stm32f1xx_hal.h"
 
-#define PN532_SWHSU_DEBUG
-
-#define PN532_SWHSU_READ_TIMEOUT						(1000)
-
-class PN532_SWHSU : public PN532Interface {
-public:
-    PN532_SWHSU(SoftwareSerial &serial);
-    
-    void begin();
-    void wakeup();
-    virtual int8_t writeCommand(const uint8_t *header, uint8_t hlen, const uint8_t *body = 0, uint8_t blen = 0);
-    int16_t readResponse(uint8_t buf[], uint8_t len, uint16_t timeout);
-    
-private:
-    SoftwareSerial* _serial;
+typedef struct {
+    UART_HandleTypeDef *huart;
     uint8_t command;
-    
-    int8_t readAckFrame();
-    
-    int8_t receive(uint8_t *buf, int len, uint16_t timeout=PN532_SWHSU_READ_TIMEOUT);
-};
+} pn532_swhsu_t;
+
+void pn532_swhsu_init(pn532_swhsu_t *dev, UART_HandleTypeDef *huart);
+void pn532_swhsu_create_interface(pn532_swhsu_t *dev, pn532_interface_t *iface);
+int8_t pn532_swhsu_write_command(pn532_swhsu_t *dev, const uint8_t *header, uint8_t hlen,
+                                 const uint8_t *body, uint8_t blen);
+int16_t pn532_swhsu_read_response(pn532_swhsu_t *dev, uint8_t *buf, uint8_t len, uint16_t timeout);
+void pn532_swhsu_wakeup(pn532_swhsu_t *dev);
+void pn532_swhsu_begin(pn532_swhsu_t *dev);
 
 #endif

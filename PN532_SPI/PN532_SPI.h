@@ -1,36 +1,23 @@
-
 #ifndef __PN532_SPI_H__
 #define __PN532_SPI_H__
 
-#include <SPI.h>
 #include "PN532Interface.h"
+#include <stdint.h>
+#include "stm32f1xx_hal.h"
 
-class PN532_SPI : public PN532Interface {
-public:
-    PN532_SPI(SPIClass &spi, uint8_t ss);
-    
-    void begin();
-    void wakeup();
-    int8_t writeCommand(const uint8_t *header, uint8_t hlen, const uint8_t *body = 0, uint8_t blen = 0);
-
-    int16_t readResponse(uint8_t buf[], uint8_t len, uint16_t timeout);
-    
-private:
-    SPIClass* _spi;
-    uint8_t   _ss;
+typedef struct {
+    SPI_HandleTypeDef *hspi;
+    GPIO_TypeDef *ss_port;
+    uint16_t ss_pin;
     uint8_t command;
-    
-    boolean isReady();
-    void writeFrame(const uint8_t *header, uint8_t hlen, const uint8_t *body = 0, uint8_t blen = 0);
-    int8_t readAckFrame();
-    
-    inline void write(uint8_t data) {
-        _spi->transfer(data);
-    };
+} pn532_spi_t;
 
-    inline uint8_t read() {
-        return _spi->transfer(0);
-    }; 
-};
+void pn532_spi_init(pn532_spi_t *dev, SPI_HandleTypeDef *hspi, GPIO_TypeDef *port, uint16_t pin);
+void pn532_spi_create_interface(pn532_spi_t *dev, pn532_interface_t *iface);
+int8_t pn532_spi_write_command(pn532_spi_t *dev, const uint8_t *header, uint8_t hlen,
+                               const uint8_t *body, uint8_t blen);
+int16_t pn532_spi_read_response(pn532_spi_t *dev, uint8_t *buf, uint8_t len, uint16_t timeout);
+void pn532_spi_wakeup(pn532_spi_t *dev);
+void pn532_spi_begin(pn532_spi_t *dev);
 
 #endif
