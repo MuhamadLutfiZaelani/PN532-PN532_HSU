@@ -67,20 +67,13 @@ bool pn532_read_passive_target_id(pn532_t *nfc, uint8_t cardbaudrate,
 
 void pn532_print_hex(const uint8_t *data, uint32_t numBytes)
 {
-    for(uint32_t i=0;i<numBytes;i++)
-    {
-#ifdef ARDUINO
-        Serial.print(" ");
-        if(data[i]<0x10) Serial.print("0");
-        Serial.print(data[i],HEX);
-#else
-        printf(" %02X",data[i]);
-#endif
+    for(uint32_t i = 0; i < numBytes; i++) {
+        if (pn532_debug_printf) {
+            pn532_debug_printf(" %02X", data[i]);
+        }
     }
-#ifdef ARDUINO
-    Serial.println();
-#else
-    printf("\n");
-#endif
+    if (pn532_debug_printf) {
+        pn532_debug_printf("\n");
+    }
 }
 
