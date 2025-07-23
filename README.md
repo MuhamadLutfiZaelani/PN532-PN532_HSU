@@ -16,7 +16,7 @@ It works with:
 ### Features
 + Support all interfaces of PN532 (I2C, SPI, HSU )
 + Read/write Mifare Classic Card
-+ Works with [Don's NDEF Library](http://goo.gl/jDjsXl)
++ Works with [Don's NDEF Library](http://goo.gl/jDjsXl) or the C implementation in `NDEF/c_version`
 + Support Peer to Peer communication(exchange data with android 4.0+)
 + Support [mbed platform](http://goo.gl/kGPovZ)
 
@@ -24,7 +24,8 @@ It works with:
 1. **Download [zip file](https://github.com/elechouse/PN532/archive/PN532_HSU.zip) and 
 extract the three folders(PN532, PN532_SPI, PN532_HSU and PN532_I2C) into libraries of Arduino.**
 2. Downlaod [Don's NDEF library](http://goo.gl/ewxeAe) and extract it into libraries of Arduino's into a new folder called "NDEF" (Note if you leave this folder as NDEF-Master Arduino will not be able to use it as a library)
-2. Follow the examples of the PN532 library
+2. Follow the examples of the PN532 library.  A minimal demonstration of the C
+   NDEF implementation is provided in `examples/ndef_c_example`.
 
 ### To do
 + Card emulation
@@ -80,3 +81,10 @@ framework.
 
 See [docs/STM32_HAL.md](docs/STM32_HAL.md) for example peripheral
 initialization and usage.
+
+## NDEF C version
+
+For bare-metal or STM32 targets without the Arduino framework the repository
+contains a minimal C implementation of NDEF message encoding.  Add
+`NDEF/c_version/ndef_c.c` to your project and include `ndef_c.h` to construct
+text records and encode NDEF messages.
