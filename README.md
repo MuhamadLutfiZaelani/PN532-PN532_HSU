@@ -69,3 +69,14 @@ If your Arduino has only one serial interface and you want to keep it for contro
 [Leonardo]: http://arduino.cc/en/Main/arduinoBoardLeonardo
 [SoftwareSerial]: https://www.arduino.cc/en/Reference/softwareSerial
 
+
+## STM32 HAL
+
+The repository includes C implementations suitable for STM32Cube HAL in the
+`PN532_I2C`, `PN532_SPI` and `PN532_HSU` folders. When compiling for STM32 make
+sure only the `.c` files are added to your project. The Arduino `.cpp` versions
+should be removed or ignored during the build as they depend on the Arduino
+framework.
+
+See [docs/STM32_HAL.md](docs/STM32_HAL.md) for example peripheral
+initialization and usage.
